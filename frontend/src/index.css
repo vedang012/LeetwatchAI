@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #0f172a;
+}
+
+html {
+  min-height: 100%;
+  background-color: #f4f7fb;
+  background-image:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.14), transparent 30%),
+    radial-gradient(circle at 85% 18%, rgba(14, 165, 233, 0.1), transparent 22%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 54%, #f5f8fc 100%);
+  color: #0f172a;
+}
+
+html.dark {
+  color-scheme: dark;
+  background-color: #020617;
+  background-image:
+    radial-gradient(circle at top, rgba(37, 99, 235, 0.16), transparent 34%),
+    linear-gradient(180deg, #020617 0%, #0f172a 55%, #020617 100%);
+  color: #e2e8f0;
+}
+
+body,
+#root {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  transition: color 180ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.25);
+  color: #f8fafc;
+}
+
+.card {
+  @apply rounded-2xl border border-slate-200/90 bg-white/90 shadow-glow backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/70;
+}
+
+.card-title {
+  @apply text-lg font-semibold text-slate-900 dark:text-slate-100;
+}
+
+.muted {
+  @apply text-sm text-slate-500 dark:text-slate-400;
+}
+
+.panel {
+  @apply rounded-2xl border border-slate-200/90 bg-slate-50/90 dark:border-slate-800 dark:bg-slate-950/60;
+}
+
+.theme-toggle {
+  @apply inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950/75 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-900 dark:hover:text-white;
+}
