@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.Model;
 import com.vedang.leetwatch.dto.LeetcodeRawData;
 import com.vedang.leetwatch.dto.UserAnalysisData;
 import org.springframework.stereotype.Service;
@@ -220,11 +221,15 @@ public class AiService {
     // ---------------- LLM ----------------
     public String generateLLMResponse(String username) throws Exception {
 
-        Client client = new Client();
+        Client client = Client.builder().build();
+
+        for (Model model : client.models.list(null)) {
+            System.out.println(model.name());
+        }
 
         GenerateContentResponse response =
                 client.models.generateContent(
-                        "gemini-2.5-flash",
+                        "gemini-3-flash-preview",
                         generatePrompt(username),
                         null
                 );
