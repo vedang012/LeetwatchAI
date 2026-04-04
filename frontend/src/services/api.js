@@ -1,17 +1,17 @@
 const LEETCODE_BASE_URL = '/api/leetcode'
-const AI_REPORT_URL = '/api/ai/report'
 
 async function request(url, options = {}) {
   let response
   const method = options.method || 'GET'
-  const isJsonBody = options.body !== undefined
+  const hasBody = options.body !== undefined
+  const accept = options.accept || 'application/json'
 
   try {
     response = await fetch(url, {
       ...options,
       headers: {
-        Accept: 'application/json',
-        ...(isJsonBody ? { 'Content-Type': 'application/json' } : {}),
+        Accept: accept,
+        ...(hasBody ? { 'Content-Type': options.contentType || 'application/json' } : {}),
         ...(options.headers || {}),
       },
     })
@@ -20,12 +20,12 @@ async function request(url, options = {}) {
   }
 
   const contentType = response.headers.get('content-type') || ''
-  const isJson = contentType.includes('application/json')
-  const body = isJson ? await response.json() : await response.text()
+  const shouldReadText = options.responseType === 'text' || contentType.startsWith('text/') || contentType.includes('markdown')
+  const body = shouldReadText ? await response.text() : await response.json()
 
   if (!response.ok) {
     const message =
-      (isJson && (body.message || body.error || body.details)) ||
+      (!shouldReadText && (body.message || body.error || body.details)) ||
       (typeof body === 'string' && body) ||
       `Request failed with status ${response.status}`
 
@@ -51,9 +51,9 @@ export function getRecentSubmissions(username) {
   return request(`${LEETCODE_BASE_URL}/users/${encodeURIComponent(username)}/recent-submissions`)
 }
 
-export function generateAiReport(payload) {
-  return request(AI_REPORT_URL, {
-    method: 'POST',
-    body: JSON.stringify(payload),
+export function generateAiReport(username) {
+  return request(`${LEETCODE_BASE_URL}/ai?username=${encodeURIComponent(username)}`, {
+    accept: 'text/markdown, text/plain;q=0.9, */*;q=0.8',
+    responseType: 'text',
   })
 }

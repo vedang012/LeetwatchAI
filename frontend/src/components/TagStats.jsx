@@ -24,12 +24,12 @@ function TagList({ title, tags, tone }) {
 
 function TagStats({ strongestTags, weakestTags }) {
   return (
-    <section className="card p-6">
+    <section className="card h-full p-6">
       <p className="text-xs uppercase tracking-[0.28em] text-accent-500 dark:text-accent-400">Tag Analysis</p>
       <h2 className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-50">Strengths and practice gaps</h2>
       <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">A quick read on where you perform well and where more repetition could help.</p>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid gap-4 md:grid-cols-2">
         <TagList title="Top Tags Solved" tags={strongestTags} tone="bg-emerald-400" />
         <TagList title="Weakest Tags" tags={weakestTags} tone="bg-amber-400" />
       </div>

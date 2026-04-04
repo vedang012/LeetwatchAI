@@ -37,7 +37,7 @@ function RecentSubmissions({ submissions }) {
                   <h3 className="font-medium text-slate-900 dark:text-slate-100">{submission.title}</h3>
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     {submission.language}
-                    {submission.timestamp ? ` · ${submission.timestamp}` : ''}
+                    {submission.timestamp ? ` â€¢ ${submission.timestamp}` : ''}
                   </p>
                 </div>
                 <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${getStatusStyles(submission.status)}`}>

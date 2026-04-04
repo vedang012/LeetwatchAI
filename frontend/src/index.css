@@ -67,3 +67,67 @@ body {
 .theme-toggle {
   @apply inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950/75 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-900 dark:hover:text-white;
 }
+
+.ai-markdown {
+  @apply text-sm leading-7 text-slate-700 dark:text-slate-300;
+}
+
+.ai-markdown > :first-child {
+  margin-top: 0;
+}
+
+.ai-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.ai-markdown h1,
+.ai-markdown h2,
+.ai-markdown h3,
+.ai-markdown h4,
+.ai-markdown h5,
+.ai-markdown h6 {
+  @apply mt-6 mb-3 font-semibold tracking-tight text-slate-950 dark:text-slate-50;
+}
+
+.ai-markdown h1 {
+  @apply text-2xl;
+}
+
+.ai-markdown h2 {
+  @apply text-xl;
+}
+
+.ai-markdown h3 {
+  @apply text-lg;
+}
+
+.ai-markdown h4,
+.ai-markdown h5,
+.ai-markdown h6 {
+  @apply text-base;
+}
+
+.ai-markdown p {
+  @apply my-3 text-sm leading-7 text-slate-700 dark:text-slate-300;
+}
+
+.ai-markdown ul,
+.ai-markdown ol {
+  @apply my-4 space-y-2 pl-5 text-sm text-slate-700 marker:text-accent-500 dark:text-slate-300;
+}
+
+.ai-markdown li {
+  @apply pl-1 leading-7;
+}
+
+.ai-markdown strong {
+  @apply font-semibold text-slate-900 dark:text-slate-100;
+}
+
+.ai-markdown em {
+  @apply italic text-slate-800 dark:text-slate-200;
+}
+
+.ai-markdown code {
+  font-family: "Consolas", "SFMono-Regular", Menlo, Monaco, monospace;
+}

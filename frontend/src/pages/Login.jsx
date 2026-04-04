@@ -72,7 +72,7 @@ function Login({ onLogin, theme, onToggleTheme }) {
           <p className="text-sm uppercase tracking-[0.3em] text-slate-500 dark:text-slate-500">Mock Authentication</p>
           <h2 className="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-50">Verify your LeetCode username</h2>
           <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-            We’ll validate the username by calling your profile endpoint and then take you straight to the dashboard.
+            We'll validate the username by calling your profile endpoint and then take you straight to the dashboard.
           </p>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
@@ -105,10 +105,6 @@ function Login({ onLogin, theme, onToggleTheme }) {
               {isLoading ? 'Verifying...' : 'Verify Username'}
             </button>
           </form>
-
-          <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400">
-            Backend base: <span className="text-slate-900 dark:text-slate-200">http://localhost:8080</span>
-          </div>
         </section>
       </div>
     </div>

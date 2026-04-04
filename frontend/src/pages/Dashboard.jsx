@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AIReport from '../components/AIReport'
 import Heatmap from '../components/Heatmap'
 import ProfileCard from '../components/ProfileCard'
@@ -155,17 +155,6 @@ function normalizeSubmissions(rawSubmissions) {
   })
 }
 
-function normalizeReport(report) {
-  const source = report?.data || report || {}
-
-  return {
-    strengths: source.strengths || source.Strengths || [],
-    weaknesses: source.weaknesses || source.Weaknesses || [],
-    behavior: source.behavior || source.Behavior || [],
-    recommendations: source.recommendations || source.Recommendations || [],
-  }
-}
-
 function LoadingCard({ title }) {
   return (
     <section className="card p-6">
@@ -196,10 +185,9 @@ function Dashboard({ username, onLogout, theme, onToggleTheme }) {
     tags: EMPTY_TAGS,
     submissions: [],
   })
-  const [aiReport, setAiReport] = useState(null)
+  const [aiReport, setAiReport] = useState('')
   const [isGeneratingReport, setIsGeneratingReport] = useState(false)
   const [aiError, setAiError] = useState('')
-  const [hasUsedAiCredit, setHasUsedAiCredit] = useState(false)
 
   const fetchDashboardData = async () => {
     setDashboardState((current) => ({
@@ -243,26 +231,8 @@ function Dashboard({ username, onLogout, theme, onToggleTheme }) {
     fetchDashboardData()
   }, [username])
 
-  const aggregatedData = useMemo(() => {
-    if (!dashboardState.profile) {
-      return null
-    }
-
-    return {
-      username,
-      profile: dashboardState.profile,
-      calendarSummary: {
-        totalSubmissions: dashboardState.calendar.totalSubmissions,
-        activeDays: dashboardState.calendar.activeDays,
-      },
-      submissionCalendar: dashboardState.calendar.days,
-      tagStats: dashboardState.tags.allTags,
-      recentSubmissions: dashboardState.submissions,
-    }
-  }, [dashboardState, username])
-
   const handleGenerateReport = async () => {
-    if (!aggregatedData || hasUsedAiCredit) {
+    if (!username) {
       return
     }
 
@@ -270,9 +240,8 @@ function Dashboard({ username, onLogout, theme, onToggleTheme }) {
     setAiError('')
 
     try {
-      const response = await generateAiReport(aggregatedData)
-      setAiReport(normalizeReport(response))
-      setHasUsedAiCredit(true)
+      const response = await generateAiReport(username)
+      setAiReport(String(response || '').trim())
     } catch (error) {
       setAiError(error.message || 'Unable to generate the AI report right now.')
     } finally {
@@ -348,24 +317,23 @@ function Dashboard({ username, onLogout, theme, onToggleTheme }) {
 
             {dashboardState.profile ? <ProfileCard profile={dashboardState.profile} /> : null}
 
-            <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+            <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
               <Heatmap days={dashboardState.calendar.days} />
-              <AIReport
-                report={aiReport}
-                isLoading={isGeneratingReport}
-                isDisabled={hasUsedAiCredit || !aggregatedData}
-                error={aiError}
-                onGenerate={handleGenerateReport}
-              />
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
               <TagStats
                 strongestTags={dashboardState.tags.strongestTags}
                 weakestTags={dashboardState.tags.weakestTags}
               />
-              <RecentSubmissions submissions={dashboardState.submissions} />
             </div>
+
+            <AIReport
+              report={aiReport}
+              isLoading={isGeneratingReport}
+              isDisabled={!username}
+              error={aiError}
+              onGenerate={handleGenerateReport}
+            />
+
+            <RecentSubmissions submissions={dashboardState.submissions} />
           </div>
         )}
       </div>

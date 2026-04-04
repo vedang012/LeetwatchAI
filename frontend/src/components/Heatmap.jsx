@@ -6,13 +6,42 @@ function getIntensityClass(count) {
   return 'bg-accent-500/80 border-accent-500 dark:border-accent-400'
 }
 
+function buildContinuousDays(days) {
+  const normalized = Array.isArray(days) ? days : []
+  const dayMap = new Map(
+    normalized.map((day) => {
+      const date = new Date(day.date)
+      return [date.toDateString(), { ...day, date: date.toISOString() }]
+    }),
+  )
+
+  const latestDate = normalized.length
+    ? new Date(normalized[normalized.length - 1].date)
+    : new Date()
+
+  latestDate.setHours(0, 0, 0, 0)
+
+  return Array.from({ length: 30 }, (_, index) => {
+    const date = new Date(latestDate)
+    date.setDate(latestDate.getDate() - (29 - index))
+    const key = date.toDateString()
+    const existing = dayMap.get(key)
+
+    return (
+      existing || {
+        date: date.toISOString(),
+        label: date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        count: 0,
+      }
+    )
+  })
+}
+
 function Heatmap({ days }) {
-  const visibleDays = days.length
-    ? days
-    : Array.from({ length: 70 }, (_, index) => ({ date: `day-${index}`, count: 0, label: 'No data' }))
+  const visibleDays = buildContinuousDays(days)
 
   return (
-    <section className="card p-6">
+    <section className="card h-full p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.28em] text-accent-500 dark:text-accent-400">Activity Heatmap</p>
@@ -21,20 +50,17 @@ function Heatmap({ days }) {
         <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500">
           <span>Less</span>
           {[0, 1, 3, 6, 9].map((count) => (
-            <span
-              key={count}
-              className={`h-3 w-3 rounded-sm border ${getIntensityClass(count)}`}
-            />
+            <span key={count} className={`h-3 w-3 rounded-sm border ${getIntensityClass(count)}`} />
           ))}
           <span>More</span>
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-7 gap-2 sm:grid-cols-10 lg:grid-cols-14">
+      <div className="mt-6 grid grid-cols-5 gap-2 sm:grid-cols-6 lg:grid-cols-10 lg:gap-2">
         {visibleDays.map((day) => (
           <div
             key={day.date}
-            className={`group relative aspect-square rounded-md border ${getIntensityClass(day.count)}`}
+            className={`group relative aspect-square min-h-0 w-full rounded-md border ${getIntensityClass(day.count)}`}
             title={`${day.label}: ${day.count} submission${day.count === 1 ? '' : 's'}`}
           >
             <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2 py-1 text-[11px] text-slate-700 shadow-lg group-hover:block dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
@@ -43,10 +69,6 @@ function Heatmap({ days }) {
           </div>
         ))}
       </div>
-
-      {!days.length && (
-        <p className="mt-4 text-sm text-slate-500 dark:text-slate-500">No submission history was returned yet. The grid is ready when data arrives.</p>
-      )}
     </section>
   )
 }
