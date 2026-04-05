@@ -39,5 +39,10 @@ public class LeetcodeController {
         return ResponseEntity.ok(service.getTagStats(username));
     }
 
+//    @GetMapping("/users/{username}/validate")
+//    public ResponseEntity<Boolean> validateLeetcodeUsername(@PathVariable("username") String username) {
+//        return ResponseEntity.ok(service.validateUsername(username));
+//    }
+
 
 }
