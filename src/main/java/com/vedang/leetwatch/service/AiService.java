@@ -3,6 +3,7 @@ package com.vedang.leetwatch.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.genai.Client;
+import com.google.genai.errors.ClientException;
 import com.google.genai.types.GenerateContentResponse;
 import com.google.genai.types.Model;
 import com.vedang.leetwatch.dto.LeetcodeRawData;
@@ -219,21 +220,46 @@ public class AiService {
         );
     }
     // ---------------- LLM ----------------
+
+    private boolean isRateLimitError(ClientException e) {
+        return e.code() == 429;
+    }
+
     public String generateLLMResponse(String username) throws Exception {
 
         Client client = Client.builder().build();
 
-        for (Model model : client.models.list(null)) {
-            System.out.println(model.name());
+        String[] models = {"gemini-3-flash-preview", "gemini-2.5-flash", "gemma-3-27b-it"};
+
+        Exception lastException = null;
+
+        for (String model : models) {
+
+            try {
+                GenerateContentResponse response =
+                        client.models.generateContent(
+                                model,
+                                generatePrompt(username),
+                                null
+                        );
+
+                System.out.println("Model used : " + model);
+                return response.text();
+
+            } catch (ClientException e) {
+                lastException = e;
+
+                if (isRateLimitError(e)) {
+                    System.out.println("Rate limit hit on " + model + ", trying next...");
+                    continue;
+                } else {
+                    throw e;
+                }
+            }
         }
 
-        GenerateContentResponse response =
-                client.models.generateContent(
-                        "gemini-3-flash-preview",
-                        generatePrompt(username),
-                        null
-                );
+        throw new Exception("All models failed", lastException);
 
-        return response.text();
+
     }
 }
