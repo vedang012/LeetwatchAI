@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LeetwatchApplication {
 
 	public static void main(String[] args) {
+
+
 		SpringApplication.run(LeetwatchApplication.class, args);
 	}
 

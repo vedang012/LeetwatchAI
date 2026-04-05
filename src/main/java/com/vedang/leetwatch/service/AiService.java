@@ -229,7 +229,17 @@ public class AiService {
 
         Client client = Client.builder().build();
 
-        String[] models = {"gemini-3-flash-preview", "gemini-2.5-flash", "gemma-3-27b-it"};
+        for (Model model : client.models.list(null)) {
+            System.out.println(model.name());
+        }
+
+        String[] models = {
+                "gemini-3-flash-preview",
+                "gemini-3.1-flash-lite-preview",
+                "gemini-2.5-flash",
+                "gemini-2.5-flash-lite",
+                "gemma-3-27b-it"
+        };
 
         Exception lastException = null;
 
@@ -259,7 +269,6 @@ public class AiService {
         }
 
         throw new Exception("All models failed", lastException);
-
 
     }
 }
